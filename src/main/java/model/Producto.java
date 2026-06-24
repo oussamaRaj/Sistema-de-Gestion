@@ -12,13 +12,15 @@ public class Producto{
     private String nombre;
     private double precio;
     private String categoria;
+    private boolean disponible;
 
 
-    Producto(int codigo, String nombre, double precio, String categoria){
+    Producto(int codigo, String nombre, double precio, String categoria,  boolean disponible) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.precio = precio;
         this.categoria = categoria;
+        this.disponible = disponible;
     }
 
     //Getters:
@@ -35,6 +37,9 @@ public class Producto{
     public String getCategoria() {
         return categoria;
     }
+    public boolean isDisponible() {
+        return disponible;
+    }
 
     @Override
     public String toString() {
@@ -48,11 +53,12 @@ public class Producto{
         return codigo == producto.codigo &&
                 Double.compare(precio, producto.precio) == 0 &&
                 Objects.equals(nombre, producto.nombre) &&
-                Objects.equals(categoria, producto.categoria);
+                Objects.equals(categoria, producto.categoria) &&
+                Objects.equals(disponible, producto.disponible);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(codigo, nombre, precio, categoria);
+        return Objects.hash(codigo, nombre, precio, categoria, disponible);
     }
 }
