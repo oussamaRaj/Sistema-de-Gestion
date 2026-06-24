@@ -20,7 +20,7 @@ public class GestorConexion {
     private static Properties props = new Properties();
     
     static {
-        try (FileInputStream fis = new FileInputStream("src/main/java/resources/config.properties")) {
+        try (FileInputStream fis = new FileInputStream("src/main/resources/config.properties")) {
            props.load(fis);                
             
         } catch (IOException e) {
@@ -46,7 +46,7 @@ public class GestorConexion {
                 return true;
             }
         } catch (SQLException e) {
-            System.out.println("Error de conexión");
+            System.out.println("Error de conexión " + e.getMessage());
         }
         return false;
     }
