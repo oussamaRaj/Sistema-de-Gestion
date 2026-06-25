@@ -4,10 +4,7 @@ import ConexionDB.GestorConexion;
 import com.sun.jna.platform.win32.Sspi;
 import model.Cliente;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Scanner;
 
 /**
@@ -15,9 +12,13 @@ import java.util.Scanner;
  * @version 1.0.0
  */
 public class GestorClientes {
- static final Scanner SC = new Scanner(System.in);
 
-    public static void menu(){
+    static final Scanner SC = new Scanner(System.in);
+
+    /**
+     * El menu del gestor del clinete lleva todos opciones necesarios
+     */
+    public static void menu() {
 
         int opcion;
         do {
@@ -27,16 +28,31 @@ public class GestorClientes {
             System.out.println("3. Eliminar Cliente");
             System.out.println("4. Buscar Cliente");
             System.out.println("5. Listar Clientes");
+            System.out.println("9. Eliminar Todos Clientes");
             System.out.println("0. Salir");
+            System.out.println("");
+            System.out.printf("Opcion: ");
             opcion = SC.nextInt();
             SC.nextLine();
 
-            switch(opcion){
+            switch (opcion) {
                 case 1:
                     añadirCliente();
                     break;
                 case 2:
                     modificarCliente();
+                    break;
+                case 3:
+                    eliminarCliente();
+                    break;
+                case 4:
+                    buscarCliente();
+                    break;
+                case 5:
+                    listarClientes();
+                    break;
+                case 9:
+                    eliminarTodosClilentes();
                     break;
 
                 case 0:
@@ -46,10 +62,14 @@ public class GestorClientes {
                     System.out.println("Opción no existe!");
                     break;
             }
-        }while (opcion != 0);
+        } while (opcion != 0);
 
     }
-    public static void añadirCliente(){
+
+    /**
+     * insertar nuevos clientes a la base de datos de la tienda.
+     */
+    public static void añadirCliente() {
 
         System.out.println("===AÑADIR CLIENTE===");
         System.out.println(" ");
@@ -69,8 +89,8 @@ public class GestorClientes {
 
         String sql = "INSERT INTO cliente (dni, nombre, apellidos, email, telefono, direccion) values (?, ?, ?, ?, ?, ?)";
 
-        try(Connection conn = GestorConexion.obtenerConexion();
-            PreparedStatement pstmt = conn.prepareStatement(sql)){
+        try (Connection conn = GestorConexion.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
 
             pstmt.setString(1, dni);
@@ -81,15 +101,18 @@ public class GestorClientes {
             pstmt.setString(6, direccion);
 
             int fila = pstmt.executeUpdate();
-            if (fila > 0){
+            if (fila > 0) {
                 System.out.println("Cliente insertado con exito!");
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println("Error : " + e.getMessage());
         }
     }
 
-    public static void modificarCliente(){
+    /**
+     * Modificar los datos del cliente a través la base de datos.
+     */
+    public static void modificarCliente() {
 
         System.out.println("===MODIFICAR CLIENTE===");
         System.out.println(" ");
@@ -106,11 +129,11 @@ public class GestorClientes {
         System.out.println("5. Telefono");
         System.out.println("6. Direccion");
 
-        int opcion =  SC.nextInt();
+        int opcion = SC.nextInt();
         SC.nextLine();
         String modificacion = "";
 
-        switch (opcion){
+        switch (opcion) {
             case 1:
                 modificacion = "dni";
                 break;
@@ -121,7 +144,7 @@ public class GestorClientes {
                 modificacion = "apellidos";
                 break;
             case 4:
-                modificacion= "email";
+                modificacion = "email";
                 break;
             case 5:
                 modificacion = "telefono";
@@ -135,21 +158,138 @@ public class GestorClientes {
         }
 
         System.out.println("Introduce nuevo valor para modifocalo : ");
-        String valor =  SC.nextLine();
+        String valor = SC.nextLine();
 
-        String sql = "UPDATE cliente set " + modificacion + " = ?  where codigo = ?" ;
+        String sql = "UPDATE cliente set " + modificacion + " = ?  where codigo = ?";
 
-        try(Connection conn = GestorConexion.obtenerConexion();
-            PreparedStatement pstmt = conn.prepareStatement(sql)){
+        try (Connection conn = GestorConexion.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, valor);
             pstmt.setInt(2, codigo);
 
             int fila = pstmt.executeUpdate();
-            if (fila > 0){
+            if (fila > 0) {
                 System.out.println("Cliente modifocado con exito!");
             }
+        } catch (SQLException e) {
+            System.out.println("Error : " + e.getMessage());
+        }
+    }
+
+    /**
+     * Eliminar el cliente asignado.
+     */
+    public static void eliminarCliente() {
+        System.out.println("===ELIMINAR CLIENTE===");
+        System.out.println("Introduce el codigo del cliente que quieres eliminar : ");
+        int codigo = SC.nextInt();
+        SC.nextLine();
+
+        String sql = "DELETE FROM cliente where codigo = ?";
+        try (Connection conn = GestorConexion.obtenerConexion();
+             PreparedStatement ptmt = conn.prepareStatement(sql)) {
+
+            ptmt.setInt(1, codigo);
+
+            int fila = ptmt.executeUpdate();
+            if (fila > 0) {
+                System.out.println("Cliente eliminado con exito!");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error : " + e.getMessage());
+        }
+    }
+
+    /**
+     * Buscar cliente que queremos a traves el dni, porque si tendremos base de datos con millon cliente no
+     * podemos buscar por el codigo, asi que el dni mejor opcion.
+     */
+    public static void buscarCliente() {
+        System.out.println("===BUSCAR CLIENTE===");
+        System.out.println("Introduce el Dni del cliente : ");
+        String dni = SC.nextLine();
+
+        String sql = "SELECT * FROM cliente WHERE dni = ?";
+
+        try (Connection conn = GestorConexion.obtenerConexion();
+             PreparedStatement ptmt = conn.prepareStatement(sql)) {
+
+            ptmt.setString(1, dni);
+
+            ResultSet rs = ptmt.executeQuery();
+
+            if (rs.next()) {
+                    System.out.println("==Cliente Encontrado==");
+
+                    int codigo = rs.getInt("codigo");
+                    String idn = rs.getString("dni");
+                    String nombre = rs.getString("nombre");
+                    String apellidos = rs.getString("Apellidos");
+                    String email = rs.getString("email");
+                    String telefono = rs.getString("telefono");
+                    String direccion = rs.getString("direccion");
+
+                    System.out.println("Codigo : " + codigo + " | Dni : " + idn + " | Nombre : " +
+                            nombre + " | Apellidos : " + apellidos + " | Email : " + email + " | Telefono : " +
+                            telefono + " | Direccion : " + direccion);
+
+            }else {
+                System.out.println("El DNI  del cliente no existe!");
+            }
         }catch (SQLException e){
+            System.out.println("Error : " + e.getMessage());
+        }
+    }
+
+    /**
+     * Listar todos los clientes asignados en nuesta base de datos.
+     */
+    public static void listarClientes(){
+        System.out.println("===LISTAR CLIENTES===");
+
+        String sql = "SELECT * FROM cliente";
+        try(Connection conn = GestorConexion.obtenerConexion();
+            PreparedStatement ptmt = conn.prepareStatement(sql);
+            ResultSet rs = ptmt.executeQuery()) {
+
+            if (rs.next()){
+
+                int codigo = rs.getInt("codigo");
+                String idn = rs.getString("dni");
+                String nombre = rs.getString("nombre");
+                String apellidos = rs.getString("Apellidos");
+                String email = rs.getString("email");
+                String telefono = rs.getString("telefono");
+                String direccion = rs.getString("direccion");
+
+                System.out.println("Codigo : " + codigo + " | Dni : " + idn + " | Nombre : " +
+                        nombre + " | Apellidos : " + apellidos + " | Email : " + email + " | Telefono : " +
+                        telefono + " | Direccion : " + direccion);
+
+            }else {
+                System.out.println("No hay clientes añadidos, elige el opcion 1 para añadir nuevos clientes.");
+            }
+        }catch (SQLException e){
+            System.out.println("Error : " + e.getMessage());
+        }
+    }
+
+    /**
+     * Eliminar todos los clientes, si queremos vaciar la base de datos.
+     */
+    public static void eliminarTodosClilentes(){
+
+        System.out.println("===ELIMINAR TODOS CLIENTES===");
+
+        String sql = "DELETE FROM cliente";
+        try (Connection conn = GestorConexion.obtenerConexion();
+             PreparedStatement ptmt = conn.prepareStatement(sql)) {
+
+            ptmt.executeUpdate();
+
+            System.out.println("Todos los clientes han sido eliminados correctamente.");
+        } catch (SQLException e) {
             System.out.println("Error : " + e.getMessage());
         }
     }
