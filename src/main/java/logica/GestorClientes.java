@@ -92,11 +92,21 @@ public class GestorClientes {
         try (Connection conn = GestorConexion.obtenerConexion();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
+            if(dni.length() > 9){
+                System.err.println("Dni invalido, debes ser de 9 digitos");
+            }else {
+                pstmt.setString(1, dni);
+            }
 
-            pstmt.setString(1, dni);
             pstmt.setString(2, nombre);
             pstmt.setString(3, apellidos);
-            pstmt.setString(4, email);
+
+            if (!email.contains("@gmail.com")){
+                System.err.println("Email invalido, no conlleva el formato del gmail.");
+            }else {
+                pstmt.setString(4, email);
+            }
+
             pstmt.setString(5, telefono);
             pstmt.setString(6, direccion);
 
@@ -195,6 +205,8 @@ public class GestorClientes {
             int fila = ptmt.executeUpdate();
             if (fila > 0) {
                 System.out.println("Cliente eliminado con exito!");
+            }else {
+                System.out.println("Error al eliminar el cliente! el codigo no existe!");
             }
         } catch (SQLException e) {
             System.out.println("Error : " + e.getMessage());
@@ -202,8 +214,8 @@ public class GestorClientes {
     }
 
     /**
-     * Buscar cliente que queremos a traves el dni, porque si tendremos base de datos con millon cliente no
-     * podemos buscar por el codigo, asi que el dni mejor opcion.
+     * Buscar cliente que queremos a traves el dni, porque si tendremos base de datos con millones de clientes no
+     * podemos buscar por el codigo, por eso el dni es una mejor opcion.
      */
     public static void buscarCliente() {
         System.out.println("===BUSCAR CLIENTE===");
@@ -253,7 +265,7 @@ public class GestorClientes {
             PreparedStatement ptmt = conn.prepareStatement(sql);
             ResultSet rs = ptmt.executeQuery()) {
 
-            if (rs.next()){
+            while (rs.next()){
 
                 int codigo = rs.getInt("codigo");
                 String idn = rs.getString("dni");
@@ -267,8 +279,6 @@ public class GestorClientes {
                         nombre + " | Apellidos : " + apellidos + " | Email : " + email + " | Telefono : " +
                         telefono + " | Direccion : " + direccion);
 
-            }else {
-                System.out.println("No hay clientes añadidos, elige el opcion 1 para añadir nuevos clientes.");
             }
         }catch (SQLException e){
             System.out.println("Error : " + e.getMessage());
