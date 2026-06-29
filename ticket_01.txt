@@ -1,0 +1,9 @@
+======== TICKET ========
+Cliente  : Sara Hernández Ruiz
+Producto : Red Bull
+Cantidad : 3
+Precio   : 2.2 €
+Total    : 6,60 €
+Fecha y Hora : 2026-06-29_16-59-28
+========================
+

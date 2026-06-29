@@ -3,6 +3,7 @@ package logica;
 import ConexionDB.GestorConexion;
 import com.sun.jna.platform.win32.Sspi;
 import model.Cliente;
+import model.Producto;
 
 import java.sql.*;
 import java.util.Scanner;
@@ -232,7 +233,7 @@ public class GestorClientes {
             ResultSet rs = ptmt.executeQuery();
 
             if (rs.next()) {
-                    System.out.println("==Cliente Encontrado==");
+                    System.out.println("==Clientes Encontrados=");
 
                     int codigo = rs.getInt("codigo");
                     String idn = rs.getString("dni");
@@ -302,5 +303,36 @@ public class GestorClientes {
         } catch (SQLException e) {
             System.out.println("Error : " + e.getMessage());
         }
+    }
+
+
+    public static Cliente buscarClientePorCodigo(int codigo) {
+
+        String sql = "SELECT * FROM cliente WHERE codigo = ?";
+        Cliente cliente = null;
+
+        try (Connection conn = GestorConexion.obtenerConexion();
+             PreparedStatement ptmt = conn.prepareStatement(sql)) {
+
+            ptmt.setInt(1, codigo);
+
+            ResultSet rs = ptmt.executeQuery();
+            if (rs.next()) {
+                cliente = new Cliente(
+                        rs.getInt("codigo"),
+                        rs.getString("dni"),
+                        rs.getString("nombre"),
+                        rs.getString("apellidos"),
+                        rs.getString("email"),
+                        rs.getString("telefono"),
+                        rs.getString("direccion")
+                );
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error : " + e.getMessage());
+        }
+
+        return cliente;
     }
 }

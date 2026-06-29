@@ -3,6 +3,7 @@ package app;
 import ConexionDB.GestorConexion;
 import logica.GestorClientes;
 import logica.GestorProductos;
+import logica.GestorVentas;
 import model.Cliente;
 
 import java.util.Scanner;
@@ -36,6 +37,8 @@ public class Main {
                 case 2:
                     GestorProductos.menu();
                     break;
+                case 3:
+                    GestorVentas.menu();
                 case 0:
                     System.out.println("Saliendo del Programa...");
                     break;

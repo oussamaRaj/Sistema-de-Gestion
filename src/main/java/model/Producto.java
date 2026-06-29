@@ -12,17 +12,15 @@ public class Producto{
     private String tipo;
     private String nombre;
     private double precio;
-    private String categoria;
     private String descripcion;
     private String esDisponible;
 
 
-    Producto(int codigo, String tipo, String nombre, double precio, String categoria, String descripcion, String esDisponible) {
+    public Producto(int codigo, String tipo, String nombre, double precio, String descripcion, String esDisponible) {
         this.codigo = codigo;
         this.tipo = tipo;
         this.nombre = nombre;
         this.precio = precio;
-        this.categoria = categoria;
         this.descripcion = descripcion;
         this.esDisponible = esDisponible;
     }
@@ -41,21 +39,37 @@ public class Producto{
     public double getPrecio() {
         return precio;
     }
-    public String getCategoria() {
-        return categoria;
-    }
-
     public String getDescripcion() {
         return descripcion;
     }
-
     public String esDisponible() {
         return esDisponible;
     }
 
+    //Setters
+
+    public void setCodigo(int codigo) {
+        this.codigo = codigo;
+    }
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+    public void setPrecio(double precio) {
+        this.precio = precio;
+    }
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+    public void setEsDisponible(String esDisponible) {
+        this.esDisponible = esDisponible;
+    }
+
     @Override
     public String toString() {
-        return "Tipo : " + tipo + " | Nombre : " + nombre + " | Precio : " + precio + " | Descrepcion : " + descripcion + " | Categoria : " + categoria;
+        return "Tipo : " + tipo + " | Nombre : " + nombre + " | Precio : " + precio + " | Descrepcion : " + descripcion ;
     }
     @Override
     public boolean equals(Object o) {
@@ -66,13 +80,12 @@ public class Producto{
                 Double.compare(precio, producto.precio) == 0 &&
                 Objects.equals(nombre, producto.nombre) &&
                 Objects.equals(tipo, producto.tipo) &&
-                Objects.equals(categoria, producto.categoria) &&
                 Objects.equals(descripcion, producto.descripcion) &&
                 Objects.equals(esDisponible, producto.esDisponible);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(codigo, tipo, nombre, precio, descripcion, categoria, esDisponible);
+        return Objects.hash(codigo, tipo, nombre, precio, descripcion, esDisponible);
     }
 }

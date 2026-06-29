@@ -1,0 +1,9 @@
+======== TICKET ========
+Cliente  : Omar Benali
+Producto : Red Bull
+Cantidad : 1
+Precio   : 2.2 €
+Total    : 2,20 €
+Fecha y Hora : 2026-06-29  | 17:01:58
+========================
+

@@ -1,0 +1,9 @@
+======== TICKET ========
+Cliente  : Youssef Khalfi
+Producto : Cargador USB-C
+Cantidad : 11
+Precio   : 8.5 €
+Total    : 93,50 €
+Fecha y Hora : 2026-06-29  | 19:15:14
+========================
+

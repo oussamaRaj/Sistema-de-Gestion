@@ -9,9 +9,9 @@ public class Venta {
     private Cliente codigoCliente;
     private int cantidad;
     private LocalDate fecha;
-    private int total;
+    private double total;
 
-    public Venta(int id, Producto codigoProducto, Cliente codigoCliente, int cantidad, LocalDate fecha,  int total) {
+    public Venta(int id, Producto codigoProducto, Cliente codigoCliente, int cantidad, LocalDate fecha,  double total) {
         this.id = id;
         this.codigoProducto = codigoProducto;
         this.codigoCliente = codigoCliente;
@@ -36,7 +36,7 @@ public class Venta {
     public LocalDate getFecha() {
         return fecha;
     }
-    public int getTotal() {
+    public double getTotal() {
         return total;
     }
 

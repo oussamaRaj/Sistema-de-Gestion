@@ -1,0 +1,9 @@
+======== TICKET ========
+Cliente  : Ahmed El Amrani
+Producto : Cargador USB-C
+Cantidad : 2
+Precio   : 8.5 €
+Total    : 17,00 €
+Fecha y Hora : 2026-06-29  | 19:10:39
+========================
+
