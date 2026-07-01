@@ -23,13 +23,12 @@ public class GestorVentas {
 
         int opcion;
         do {
-            System.out.println("===MENÚ GESTOR PRODUCTOS===");
+            System.out.println("===MENÚ GESTOR VENTAS===");
             System.out.println("1. Resgistrar Venta");
             System.out.println("2. Mostrar Todas Ventas");
-            System.out.println("3. ");
-            System.out.println("4. ");
-            System.out.println("5. ");
-            System.out.println("9. ");
+            System.out.println("3. Buscar Venta");
+            System.out.println("4. Eliminar Venta");
+            System.out.println("5. Mostrar Ventas de un Cliente");
             System.out.println("0. Salir");
             System.out.println("");
             System.out.printf("Opcion: ");
@@ -41,19 +40,16 @@ public class GestorVentas {
                     registrarVenta();
                     break;
                 case 2:
-
+                    mostrarVentas();
                     break;
                 case 3:
-
+                    buscarVenta();
                     break;
                 case 4:
-
+                    eliminarVenta();
                     break;
                 case 5:
-
-                    break;
-                case 9:
-
+                    mostrarVentasCliente();
                     break;
                 case 0:
                     System.out.println("Saliendo del Gestor de Los Ventas..");
@@ -137,6 +133,109 @@ public class GestorVentas {
 
         } catch (IOException e) {
             System.out.println("Error al generar ticket: " + e.getMessage());
+        }
+    }
+    public static void mostrarVentas(){
+        System.out.println("===MOSTRAR VENTAS===");
+        System.out.println("==Ventas Encontrados==");
+        String sql = "select v.id, v.cantidad, v.fecha, v.total,c.nombre as cliente, c.apellidos as apellidos, p.nombre as producto from venta v join cliente c on v.codigoCliente = c.codigo join producto p on v.codigoProducto = p.codigo";
+        try(Connection conn = GestorConexion.obtenerConexion();
+            PreparedStatement ptmt = conn.prepareStatement(sql)){
+
+            ResultSet rs = ptmt.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String nombreCliente = rs.getString("cliente") + " " + rs.getString("apellidos");
+                String apellidos = rs.getString("apellidos");
+                String nombreProducto = rs.getString("producto");
+                int cantidad = rs.getInt("cantidad");
+                LocalDate fecha = rs.getDate("fecha").toLocalDate();
+                double total =  rs.getDouble("total");
+
+                System.out.println("ID : " + id + " | Cliente : " + nombreCliente + " | Producto : " + nombreProducto + " | Cantidad : " + cantidad +
+                                     " | fecha : " + fecha +" | Total : " + String.format("%.2f", total) + " €");
+            }
+        }catch(SQLException ex){
+            System.out.println("ERROR : " + ex.getMessage());
+        }
+
+    }
+    public static void mostrarVentasCliente(){
+        System.out.println("===BUSCAR VENTAS DEL CLIENTE===");
+        System.out.println("Introduce el Dni del cliente : ");
+        String dni = SC.nextLine();
+
+        String sql = "SELECT c.dni AS Dni,\n" +
+                "       v.id,\n" +
+                "       v.codigoProducto,\n" +
+                "       v.codigoCliente,\n" +
+                "       v.cantidad,\n" +
+                "       v.fecha,\n" +
+                "       v.total\n" +
+                "FROM venta v\n" +
+                "JOIN cliente c ON v.codigoCliente = c.codigo\n" +
+                "WHERE c.dni = ?";
+        try(Connection conn = GestorConexion.obtenerConexion();
+            PreparedStatement ptmt = conn.prepareStatement(sql)){
+            ptmt.setString(1, dni);
+            ResultSet rs = ptmt.executeQuery();
+            while (rs.next()){
+                String idn = rs.getString("Dni");
+                int id = rs.getInt("id");
+                int codPro = rs.getInt("codigoProducto");
+                int codCliente = rs.getInt("codigoCliente");
+                int cantidad = rs.getInt("cantidad");
+                LocalDate fecha = rs.getDate("fecha").toLocalDate();
+                double total = rs.getDouble("total");
+
+                System.out.println("Dni : " + idn + " | Id Venta : " + id + " | Codigo Producto : " + codPro + " | Codigo Cliente : " + codCliente
+                                    + " | Cantidad : " + cantidad + " | Fecha : " + fecha + " | Total : " + String.format("%.2f", total) + " €");
+            }
+        }catch(SQLException e){
+            System.out.println("ERROR : " + e.getMessage());
+        }
+    }
+    public static void buscarVenta(){
+        System.out.println("===BUSCAR VENTA===");
+        System.out.println("Introduce el Codigo de venta : ");
+        String cod = SC.nextLine();
+
+        String sql = "SELECT * FROM  venta WHERE id = ?";
+        try(Connection conn = GestorConexion.obtenerConexion();
+            PreparedStatement ptmt = conn.prepareStatement(sql)){
+            ptmt.setString(1, cod);
+            ResultSet rs = ptmt.executeQuery();
+            while (rs.next()){
+                String id = rs.getString("id");
+                int codPro = rs.getInt("codigoProducto");
+                int codCliente = rs.getInt("codigoCliente");
+                int cantidad = rs.getInt("cantidad");
+                LocalDate fecha = rs.getDate("fecha").toLocalDate();
+                double total = rs.getDouble("total");
+
+                System.out.println("Id : " + id + " | Codigo Producto : " + codPro + " | Codigo Cliente : " + codCliente + " | Cantidad : " + cantidad +
+                                    " | Fecha : " + fecha + " | Total : " + String.format("%.2f", total) + " €");
+            }
+        }catch(SQLException e){
+            System.out.println("ERROR : " + e.getMessage());
+        }
+    }
+    public static void eliminarVenta(){
+        System.out.println("===ELIMINAR VENTA===");
+        System.out.println("Introduce el Codigo de venta que desea eliminar : ");
+        int cod = SC.nextInt();
+        String sql = "DELETE FROM venta WHERE id = ?";
+        try (Connection conn = GestorConexion.obtenerConexion();
+              PreparedStatement ptmt = conn.prepareStatement(sql)  ){
+
+            ptmt.setInt(1, cod);
+
+            int fila = ptmt.executeUpdate();
+            if (fila > 0) {
+                System.out.println("Venta eliminado con exito!");
+            }
+        }catch (SQLException e){
+            System.out.println("ERROR : " + e.getMessage());
         }
     }
 }

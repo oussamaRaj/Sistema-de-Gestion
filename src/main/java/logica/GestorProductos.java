@@ -256,29 +256,29 @@ public class GestorProductos {
 
     public static void buscarProducto() {
         System.out.println("===BUSCAR PRODUCTO===");
-        System.out.println("Introduce el Nombre del producto : ");
-        String nombre = SC.nextLine();
+        System.out.println("Introduce el Codigo del producto : ");
+        int codigo = SC.nextInt();
 
-        String sql = "SELECT * FROM producto WHERE nombre = ?";
+        String sql = "SELECT * FROM producto WHERE codigo = ?";
 
         try (Connection conn = GestorConexion.obtenerConexion();
              PreparedStatement ptmt = conn.prepareStatement(sql)) {
 
-            ptmt.setString(1, nombre);
+            ptmt.setInt(1, codigo);
 
             ResultSet rs = ptmt.executeQuery();
 
             if (rs.next()) {
                 System.out.println("==Productos Encontrados==");
 
-                int codigo = rs.getInt("codigo");
+                int cod = rs.getInt("codigo");
                 String tipo =  rs.getString("tipo");
                 String nombreP = rs.getString("nombre");
                 double precio = rs.getDouble("precio");
                 String descripcion = rs.getString("descripcion");
                 String esDisponible = rs.getString("esDisponible");
 
-                System.out.println("Codigo : " + codigo + " | Tipo : " + tipo + " | Nombre : " + nombreP + " | Precio : " + precio + " | Descrepcion : " + descripcion +
+                System.out.println("Codigo : " + cod + " | Tipo : " + tipo + " | Nombre : " + nombreP + " | Precio : " + precio + " | Descrepcion : " + descripcion +
                         " | Disponible ? : " + esDisponible);
             }else {
                 System.out.println("El Nombre del producto no existe!");

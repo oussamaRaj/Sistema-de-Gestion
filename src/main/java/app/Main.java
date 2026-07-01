@@ -39,6 +39,7 @@ public class Main {
                     break;
                 case 3:
                     GestorVentas.menu();
+                    break;
                 case 0:
                     System.out.println("Saliendo del Programa...");
                     break;
