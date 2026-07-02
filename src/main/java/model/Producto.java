@@ -42,7 +42,7 @@ public class Producto{
     public String getDescripcion() {
         return descripcion;
     }
-    public String esDisponible() {
+    public String getEsDisponible() {
         return esDisponible;
     }
 
